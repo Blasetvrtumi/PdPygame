@@ -102,7 +102,7 @@ clock = pygame.time.Clock()   #Needed for fps
 #Get elements needed
 background, board, cross, circle, text, instructions_1, instructions_2, small_font = get_elements()
 espacios = {}
-counter = 0
+turn = 0
 
 #Show in screen before loop
 screen.blit(background,(0,0))
@@ -126,15 +126,15 @@ while running:
             pos = pygame.mouse.get_pos() 
             cord = pos_element(pos)
             if cord not in espacios.keys():
-                if counter == 0:
+                if turn == 0:
                     screen.blit(circle, cord)
                     screen.blit(cross, (357, 85))
                     espacios[cord] = "el circulo"
-                    counter = 1
-                elif counter == 1:
+                    turn = 1
+                elif turn == 1:
                     screen.blit(cross, cord)
                     screen.blit(circle, (350, 85))
-                    counter = 0
+                    turn = 0
                     espacios[cord] = "la cruz"
                 
             else:
