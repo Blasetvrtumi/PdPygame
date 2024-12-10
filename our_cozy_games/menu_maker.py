@@ -17,7 +17,7 @@ def crear_carga(text = None):
         loading.add.button("Entendido", lanzar_carga)
     return loading
 
-def pagina_carga(text = None):   
+def pagina_carga(text = None, programa = None):   
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))
@@ -33,7 +33,10 @@ def pagina_carga(text = None):
                 progress.set_value(progress.get_value() + 1)
                 if progress.get_value() == 100:
                     pygame.time.set_timer(update_loading, 0)
-                    main.run()  # Llama a la función principal del módulo main
+                    if not programa:
+                        main.run()  # Lanza rpg
+                    else:
+                        programa()
             if event.type == pygame.QUIT:
                 exit()
 
