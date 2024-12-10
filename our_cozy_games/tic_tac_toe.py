@@ -1,6 +1,6 @@
 import pygame
 import os   #To manage wd
-from menu_maker import lil_announcement
+from menu_maker import pagina_carga
 
 WIDTH = 600
 HEIGHT = 800
@@ -9,7 +9,7 @@ text_color = (0,0,0)
 
 def get_elements():
     '''Gets all the elements we need in the correct format.'''
-    carpeta = './our_cozy_games/static/src'
+    carpeta = './static/src'
     background = pygame.image.load(os.path.join(carpeta, 'folio.jpeg')).convert()
     board = pygame.image.load(os.path.join(carpeta, 'big_tic_tac_toe.jpeg')).convert()
     cross = pygame.image.load(os.path.join(carpeta, 'cross.png')).convert()
@@ -153,7 +153,8 @@ def run():
                     text = small_font.render('Ha ganado ' + ganador, True, text_color, bg_color)
                     screen.blit(text, (75, 700))
                     pygame.display.flip()
-                    #lil_announcement(pygame, 700, 200, 'Ha ganado ' + ganador) #Se quita esta pantalla              
+                    pagina_carga('Ha ganado ' + ganador) #Anuncia resultado y lleva al programa principal 
+                    #          
 
     pygame.quit()
 
