@@ -1,5 +1,6 @@
 import pygame
 import os   #To manage wd
+from menu_maker import lil_announcement
 
 WIDTH = 600
 HEIGHT = 800
@@ -94,61 +95,67 @@ def es_fin_de_partida(espacios):
     
     return bool, ganador
 
-#Screen settings
-pygame.init()
-screen = pygame.display.set_mode((WIDTH,HEIGHT))
-clock = pygame.time.Clock()   #Needed for fps
+def show_in_screen(elements, screen):
+    for cords, image in elements:
+         screen.blit(image, cords)
 
-#Get elements needed
-background, board, cross, circle, text, instructions_1, instructions_2, small_font = get_elements()
-espacios = {}
-turn = 0
+def run():
+    #Screen settings
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH,HEIGHT))
+    clock = pygame.time.Clock()   #Needed for fps
 
-#Show in screen before loop
-screen.blit(background,(0,0))
-screen.blit(board, (150,150))
-screen.blit(text, (150, 100))
-screen.blit(instructions_1, (75, 600))
-screen.blit(instructions_2, (75, 650))
-screen.blit(circle, (350, 85))
-pygame.display.flip()
+    #Get elements needed
+    background, board, cross, circle, text, instructions_1, instructions_2, small_font = get_elements()
+    espacios = {}
+    turn = 0
 
+    #Show in screen before loop
+    screen.blit(background,(0,0))
+    screen.blit(board, (150,150))
+    screen.blit(text, (150, 100))
+    screen.blit(instructions_1, (75, 600))
+    screen.blit(instructions_2, (75, 650))
+    screen.blit(circle, (350, 85))
+    pygame.display.flip()
 
-#Game loop
-running = True
-while running:
+    #Game loop
+    running = True
+    while running:
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-        elif event.type == pygame.MOUSEBUTTONUP:
-            pos = pygame.mouse.get_pos() 
-            cord = pos_element(pos)
-            if cord not in espacios.keys():
-                if turn == 0:
-                    screen.blit(circle, cord)
-                    screen.blit(cross, (357, 85))
-                    espacios[cord] = "el circulo"
-                    turn = 1
-                elif turn == 1:
-                    screen.blit(cross, cord)
-                    screen.blit(circle, (350, 85))
-                    turn = 0
-                    espacios[cord] = "la cruz"
+            elif event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos() 
+                cord = pos_element(pos)
+                if cord not in espacios.keys():
+                    if turn == 0:
+                        screen.blit(circle, cord)
+                        screen.blit(cross, (357, 85))
+                        espacios[cord] = "el circulo"
+                        turn = 1
+                    elif turn == 1:
+                        screen.blit(cross, cord)
+                        screen.blit(circle, (350, 85))
+                        turn = 0
+                        espacios[cord] = "la cruz"
                 
-            else:
-                text = small_font.render('Donde no hay fichas.', True, text_color, bg_color)
-                screen.blit(text, (75, 700))
+                else:
+                    text = small_font.render('Donde no hay fichas.', True, text_color, bg_color)
+                    screen.blit(text, (75, 700))
                 
-            pygame.display.flip()
-
-            bool, ganador = es_fin_de_partida(espacios)
-            if bool:
-                text = small_font.render('Ha ganado ' + ganador, True, text_color, bg_color)
-                screen.blit(text, (75, 700))
                 pygame.display.flip()
 
-               
+                bool, ganador = es_fin_de_partida(espacios)
+                if bool:
+                    text = small_font.render('Ha ganado ' + ganador, True, text_color, bg_color)
+                    screen.blit(text, (75, 700))
+                    pygame.display.flip()
+                    #lil_announcement(pygame, 700, 200, 'Ha ganado ' + ganador) #Se quita esta pantalla              
 
-pygame.quit()
+    pygame.quit()
+
+if __name__ == '__main__':
+    run()
