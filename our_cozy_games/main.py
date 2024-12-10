@@ -12,7 +12,13 @@ frameDel = 100
 lastUp = pygame.time.get_ticks()
 speed = 5
 
-charTileset = pygame.image.load("./static/src/character/brunette_tileset.png")
+try:
+    with open('selected_character.txt', 'r') as f:
+        selected_character = f.read()
+except:
+    selected_character = "brunette_tileset.png"
+
+charTileset = pygame.image.load("./static/src/character/" + selected_character)
 COLS = 3
 ROWS = 4
 FRAME_WIDTH = charTileset.get_width() // COLS
@@ -82,67 +88,80 @@ class Games:
     def go(self):
         match self.code:
             case 1: pass #Sitio para llamar a minijuegos
+def run():
+    WIDTH = 1100
+    HEIGHT = 800
 
-pygame.init()
+    pygame.init()
 
-screen = pygame.display.set_mode((WIDTH,HEIGHT)) #(horizontal, vertical)
-clock = pygame.time.Clock()            #needed to set fps
+    screen = pygame.display.set_mode((WIDTH,HEIGHT)) #(horizontal, vertical)
+    clock = pygame.time.Clock()            #needed to set fps
 
-#Take images from static/src
-carpeta = '../our_cozy_games/static/src/character'#For character
-carpeta = '../our_cozy_games/static/src'#Others
-background = pygame.image.load(os.path.join(carpeta, 'background_2.jpg')).convert()
-WIDTH = background.get_width()
-HEIGHT = background.get_height()
-screen = pygame.display.set_mode((WIDTH, HEIGHT)) #(horizontal, vertical)
-cheeckers = pygame.image.load(os.path.join(carpeta, 'cheeckers_1.png')).convert()
-tic_tac_toe = pygame.image.load(os.path.join(carpeta, 'tic_tac_toe_1.png')).convert()
-notebook = pygame.image.load(os.path.join(carpeta, 'notebook_1.png')).convert()
+    #Take images from static/src
+    carpeta = '../our_cozy_games/static/src/character'#For character
+    carpeta = '../our_cozy_games/static/src'#Others
+    try:
+        with open('selected_background.txt', 'r') as f:
+            selected_background = f.read()
+    except:
+        selected_background = 'background_2.jpg'
+
+    background = pygame.image.load(os.path.join(carpeta, selected_background)).convert()
+    WIDTH = background.get_width()
+    HEIGHT = background.get_height()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT)) #(horizontal, vertical)
+    cheeckers = pygame.image.load(os.path.join(carpeta, 'cheeckers_1.png')).convert()
+    tic_tac_toe = pygame.image.load(os.path.join(carpeta, 'tic_tac_toe_1.png')).convert()
+    notebook = pygame.image.load(os.path.join(carpeta, 'notebook_1.png')).convert()
 
 
-#Arreglar desde aquí    
-screen.blit(background, (0, 0))
-pygame.display.flip()
+    #Arreglar desde aquí    
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
 
-#See how to create player object 
-p = Character(charFrames, (350, 100), 3)   #create the player object
-tictactoe = Games(tic_tac_toe, (215, 400), None) #Conectar con módulo
-checkers = Games(cheeckers, (215, 500), None) #Conectar con módulo
-notebook = Games(notebook, (640, 150), None) #Conectar con módulo
-objects = [tictactoe, checkers, notebook] #Nos servirá para regular el movimiento
+    #See how to create player object 
+    p = Character(charFrames, (350, 100), 3)   #create the player object
+    tictactoe = Games(tic_tac_toe, (215, 400), None) #Conectar con módulo
+    checkers = Games(cheeckers, (215, 500), None) #Conectar con módulo
+    notebook = Games(notebook, (640, 150), None) #Conectar con módulo
+    objects = [tictactoe, checkers, notebook] #Nos servirá para regular el movimiento
 
-#Bucle a customizar 
-while True:
-    screen.blit(background, p.pos, p.pos)
-    for o in objects:
-        screen.blit(o.image, o.cords)
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP]:
-        p.move("up")
-    if keys[pygame.K_DOWN]:
-        p.move("down")
-    if keys[pygame.K_LEFT]:
-        p.move("left")
-    if keys[pygame.K_RIGHT]:
-        p.move("right")
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-    screen.blit(p.image, p.pos)
+    #Bucle a customizar 
+    while True:
+        screen.blit(background, p.pos, p.pos)
+        for o in objects:
+            screen.blit(o.image, o.cords)
 
-    #Si varios ojetos -> Pasarlo a un jugador
-    for o in objects:
-        if isinstance(o, Character):
-            o.move()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP]:
+            p.move("up")
+        if keys[pygame.K_DOWN]:
+            p.move("down")
+        if keys[pygame.K_LEFT]:
+            p.move("left")
+        if keys[pygame.K_RIGHT]:
+            p.move("right")
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+        screen.blit(p.image, p.pos)
+
+        #Si varios ojetos -> Pasarlo a un jugador
+        for o in objects:
+            if isinstance(o, Character):
+                o.move()
         #screen.blit(o.image, o.pos)
-    pygame.display.update()
-    clock.tick(60)
+        pygame.display.update()
+        clock.tick(60)
 
-# Mantener la ventana abierta hasta que se cierre
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    # Mantener la ventana abierta hasta que se cierre
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-pygame.quit()
+    pygame.quit()
+
+if __name__ == '__main__':
+    run()
