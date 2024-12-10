@@ -53,47 +53,49 @@ def pos_element(pos):
 def es_fin_de_partida(espacios):
     bool = False
     ganador = None
+
+    print(espacios)
     #Lleno el tablero
     if len(espacios) == 9:
         bool = True
         ganador = 'nadie. Empate.'
     #Filas iguales
-    elif (150, 250) in espacios and (150, 360)in espacios and (150, 460) in espacios:
-        if espacios[(150, 250)] == espacios[(150, 360)] == espacios[(150, 460)]:
-            bool = True
-            ganador = espacios[(150, 250)]
-    elif (250, 250) in espacios and (250, 360)in espacios and (250, 460) in espacios:
-        if espacios[(250, 250)] == espacios[(250, 360)] == espacios[(250, 460)]:
-            bool = True
-            ganador = espacios[(250, 460)]
-    elif (360, 250) in espacios and (360, 360)in espacios and (360, 460) in espacios:
-        if espacios[(360, 250)] == espacios[(360, 360)] == espacios[(360, 460)]:
-            bool = True
-            ganador = espacios[(360, 460)]
-    #Columnas iguales
-    elif (150, 250) in espacios and (250, 250)in espacios and (360, 250) in espacios:
-        if espacios[(150, 250)] == espacios[(250, 250)] == espacios[(360, 250)]:
-            bool = True
-            ganador = espacios[(150, 250)]
-    elif (150, 360) in espacios and (250, 360)in espacios and (360, 360) in espacios:
-        if espacios[(150, 360)] == espacios[(250, 360)] == espacios[(360, 360)]:
-            bool = True
-            ganador = espacios[(250, 360)]
-    elif (150, 460) in espacios and (250, 460)in espacios and (360, 460) in espacios:
-        if espacios[(150, 460)] == espacios[(250, 460)] == espacios[(360, 460)]:
-            bool = True
-            ganador = espacios[(360, 460)]
-    #Diagonales iguales
-    elif (150, 250) in espacios and (250, 360)in espacios and (360, 460) in espacios:
-        if espacios[(150, 250)] == espacios[(250, 360)] == espacios[(360, 460)]:
-            bool = True
-            ganador = espacios[(150, 250)]
-    elif (150, 460) in espacios and (250, 360)in espacios and (360, 250) in espacios:
-        if espacios[(150, 460)] == espacios[(250, 360)] == espacios[(360, 250)]:
-            bool = True
-            ganador = espacios[(360, 250)]
-    
-    return bool, ganador
+    else:
+        if (150, 250) in espacios and (150, 360)in espacios and (150, 460) in espacios:
+            if espacios[(150, 250)] == espacios[(150, 360)] == espacios[(150, 460)]:
+                bool = True
+                ganador = espacios[(150, 250)]
+        if (250, 250) in espacios and (250, 360)in espacios and (250, 460) in espacios:
+            if espacios[(250, 250)] == espacios[(250, 360)] == espacios[(250, 460)]:
+                bool = True
+                ganador = espacios[(250, 460)]
+        if (360, 250) in espacios and (360, 360)in espacios and (360, 460) in espacios:
+            if espacios[(360, 250)] == espacios[(360, 360)] == espacios[(360, 460)]:
+                bool = True
+                ganador = espacios[(360, 460)]
+        #Columnas iguales
+        if (150, 250) in espacios and (250, 250)in espacios and (360, 250) in espacios:
+            if espacios[(150, 250)] == espacios[(250, 250)] == espacios[(360, 250)]:
+                bool = True
+                ganador = espacios[(150, 250)]
+        if (150, 360) in espacios and (250, 360)in espacios and (360, 360) in espacios:
+            if espacios[(150, 360)] == espacios[(250, 360)] == espacios[(360, 360)]:
+                bool = True
+                ganador = espacios[(250, 360)]
+        if (150, 460) in espacios and (250, 460)in espacios and (360, 460) in espacios:
+            if espacios[(150, 460)] == espacios[(250, 460)] == espacios[(360, 460)]:
+                bool = True
+                ganador = espacios[(360, 460)]
+        #Diagonales iguales
+        if (150, 250) in espacios and (250, 360)in espacios and (360, 460) in espacios: 
+            if espacios[(150, 250)] == espacios[(250, 360)] == espacios[(360, 460)]:
+                bool = True
+                ganador = espacios[(150, 250)]
+        if (150, 460) in espacios and (250, 360)in espacios and (360, 250) in espacios:
+            if espacios[(150, 460)] == espacios[(250, 360)] == espacios[(360, 250)]:
+                bool = True
+                ganador = espacios[(360, 250)]
+        return bool, ganador
 
 def show_in_screen(elements, screen):
     for cords, image in elements:
@@ -153,7 +155,7 @@ def run():
                     text = small_font.render('Ha ganado ' + ganador, True, text_color, bg_color)
                     screen.blit(text, (75, 700))
                     pygame.display.flip()
-                    pagina_carga('Ha ganado ' + ganador) #Anuncia resultado y lleva al programa principal 
+                    pagina_carga('Ha ganado ' + ganador, run, True) #Anuncia resultado y lleva al programa principal 
                     #          
 
     pygame.quit()

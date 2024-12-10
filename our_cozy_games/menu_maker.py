@@ -16,24 +16,37 @@ def lanzar_main():
     pygame.time.set_timer(update_loading, 30)
 
 
-def crear_carga(text = None):    
+def crear_carga_main(text = None):    
     atras = False
     loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_DARK)
     loading.add.progress_bar("Progress", progressbar_id="1", default=0, width=200)
     if text:
         loading.add.label(text)
         loading.add.button("Entendido", lanzar_carga)
-    loading.add.button("Volver al rpg", lanzar_main)
+    loading.add.button("Atras", lanzar_main)
     return loading
 
-def pagina_carga(text = None, programa = None):   
+def crear_carga_juego(text = None):    
+    atras = False
+    loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_DARK)
+    loading.add.progress_bar("Progress", progressbar_id="1", default=0, width=200)
+    if text:
+        loading.add.label(text)
+        loading.add.button("Entendido", lanzar_main)
+    loading.add.button("Jugar otra", lanzar_carga)
+    return loading
+
+def pagina_carga(text = None, programa = None, de_juego = False):   
     global atras
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
-    loading = crear_carga(text)
+    if de_juego:
+        loading = crear_carga_juego(text)
+    else:
+        loading = crear_carga_main(text)
 
     while True:
         events = pygame.event.get()
