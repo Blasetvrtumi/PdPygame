@@ -5,41 +5,72 @@ import os   #To manage wd
 WIDTH = 1100
 HEIGHT = 800
 
+x, y = 350, 100 # Posición inicial del personaje
+currentDir = 0
+currentFrame = 0
+frameDel = 100
+lastUp = pygame.time.get_ticks()
+speed = 5
+
+charTileset = pygame.image.load("./static/src/character/brunette_tileset.png")
+COLS = 3
+ROWS = 4
+FRAME_WIDTH = charTileset.get_width() // COLS
+FRAME_HEIGHT = charTileset.get_height() // ROWS
+
+def load_frames(tileset, rows, cols):
+    frames = []
+    for row in range(rows):
+        for col in range(cols):
+
+            frame = tileset.subsurface(pygame.Rect(
+                col * FRAME_WIDTH,
+                row * FRAME_HEIGHT,
+                FRAME_WIDTH,
+                FRAME_HEIGHT
+            ))
+            frames.append(frame)
+    return frames
+
+
+charFrames = load_frames(charTileset, 4, 3)
+
 #Class that creates the main character
 class Character:
-    def __init__(self, images:dict, cords, speed):
+    def __init__(self, images:list, cords, speed):
         self.speed = speed
         self.images = images
-        self.image = images['front'][2]
+        self.image = images[3]
         self.cords = cords
-        self.pos = images['front'][2].get_rect().move(0, cords[1])
-        self.counter = 2
-    def change_image(self, position):
-        self.counter += 1
-        if self.counter >= 4:
-            self.counter = 0
-        self.pos = self.images[position][self.counter].get_rect().move(0, self.height)
-        self.image = self.images[position][self.counter]
+        self.pos = images[3].get_rect().move(0, cords[1])
+        print(self.pos)
+        self.counter = 0
+        self.lastUpdate = pygame.time.get_ticks()
+        self.animDel = 200
+    def change_image(self, direction):
+        now = pygame.time.get_ticks()
+        if now - self.lastUpdate > self.animDel:
+            self.counter = ((self.counter + 1) % 3) + (direction * 3) # Cambiar entre 0, 1, 2
+            self.lastUpdate = now
+            self.image = self.images[self.counter]
+
     def move(self, dir):
-        '''
-        self.pos = self.pos.move(self.speed, 0)
-        if self.pos.right > 600:
-            self.pos.left = 0
-        '''
-        speed = 2 * self.speed
-        match dir:
-            case "up":
-                if (self.pos.top > 0):
-                    self.pos = self.pos.move(0, -speed)
-            case "down":
-                if (self.pos.bottom < HEIGHT):
-                    self.pos = self.pos.move(0, speed)
-            case "left":
-                if (self.pos.left > 0):
-                    self.pos = self.pos.move(-speed, 0)
-            case "right":
-                if (self.pos.right < WIDTH):
-                    self.pos = self.pos.move(speed, 0)
+        if dir == "up":
+            if self.pos.top > 0:
+                self.pos = self.pos.move(0, -self.speed)
+            self.change_image(3)
+        elif dir == "down":
+            if self.pos.bottom < HEIGHT:  # Asumiendo que la altura de la pantalla es 600
+                self.pos = self.pos.move(0, self.speed)
+            self.change_image(0)
+        elif dir == "left":
+            if self.pos.left > 0:
+                self.pos = self.pos.move(-self.speed, 0)
+            self.change_image(1)
+        elif dir == "right":
+            if self.pos.right < WIDTH:  # Asumiendo que el ancho de la pantalla es 800
+                self.pos = self.pos.move(self.speed, 0)
+            self.change_image(2)
 
 #Class that creates other objects
 class Games:
@@ -59,46 +90,26 @@ clock = pygame.time.Clock()            #needed to set fps
 
 #Take images from static/src
 carpeta = '../our_cozy_games/static/src/character'#For character
-player = {}
-player['front'] = [
-    pygame.image.load(os.path.join(carpeta, 'brunette_front_1.png')).convert(),
-    pygame.image.load(os.path.join(carpeta, 'brunette_front_2.png')).convert(),
-    pygame.image.load(os.path.join(carpeta, 'brunette_front_3.png')).convert()]
-player['left'] = [
-    pygame.image.load(os.path.join(carpeta, 'brunette_left_1.png')).convert(), 
-    pygame.image.load(os.path.join(carpeta, 'brunette_left_2.png')).convert(), 
-    pygame.image.load(os.path.join(carpeta, 'brunette_left_3.png')).convert()]
-player['right'] = [
-    pygame.image.load(os.path.join(carpeta, 'brunette_right_1.png')).convert(),
-    pygame.image.load(os.path.join(carpeta, 'brunette_right_2.png')).convert(),
-    pygame.image.load(os.path.join(carpeta, 'brunette_right_3.png')).convert()]
-player['back'] = [
-    pygame.image.load(os.path.join(carpeta, 'brunette_back_1.png')).convert(),
-    pygame.image.load(os.path.join(carpeta, 'brunette_back_2.png')).convert(),
-    pygame.image.load(os.path.join(carpeta, 'brunette_back_3.png')).convert()]
 carpeta = '../our_cozy_games/static/src'#Others
 background = pygame.image.load(os.path.join(carpeta, 'background_2.jpg')).convert()
+WIDTH = background.get_width()
+HEIGHT = background.get_height()
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) #(horizontal, vertical)
 cheeckers = pygame.image.load(os.path.join(carpeta, 'cheeckers_1.png')).convert()
 tic_tac_toe = pygame.image.load(os.path.join(carpeta, 'tic_tac_toe_1.png')).convert()
 notebook = pygame.image.load(os.path.join(carpeta, 'notebook_1.png')).convert()
 
 
 #Arreglar desde aquí    
-screen.blit(background, (20, 0))
+screen.blit(background, (0, 0))
 pygame.display.flip()
 
 #See how to create player object 
-p = Character(player, (350, 100), 3)   #create the player object
-tictactoe = Games(tic_tac_toe, (225, 400), None) #Conectar con módulo
-checkers = Games(cheeckers, (225, 500), None) #Conectar con módulo
-notebook = Games(notebook, (650, 150), None) #Conectar con módulo
+p = Character(charFrames, (350, 100), 3)   #create the player object
+tictactoe = Games(tic_tac_toe, (215, 400), None) #Conectar con módulo
+checkers = Games(cheeckers, (215, 500), None) #Conectar con módulo
+notebook = Games(notebook, (640, 150), None) #Conectar con módulo
 objects = [tictactoe, checkers, notebook] #Nos servirá para regular el movimiento
-
-#screen.blit(p.image, p.cords)
-#screen.blit(tictactoe.image, tictactoe.cords)
-#screen.blit(checkers.image, checkers.cords)
-#screen.blit(notebook.image, notebook.cords)
-#pygame.display.flip()
 
 #Bucle a customizar 
 while True:
