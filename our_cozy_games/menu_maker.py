@@ -24,7 +24,6 @@ def pagina_carga(text = None):
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     loading = crear_carga(text)
-    lanzar_carga
 
     while True:
         events = pygame.event.get()
