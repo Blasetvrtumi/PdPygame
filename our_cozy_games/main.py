@@ -16,7 +16,7 @@ try:
     with open('selected_character.txt', 'r') as f:
         selected_character = f.read()
 except:
-    selected_character = "brunette_tileset.png"
+    selected_character = "brown_hair.png"
 
 charTileset = pygame.image.load("./static/src/character/" + selected_character)
 COLS = 3
@@ -41,6 +41,18 @@ def load_frames(tileset, rows, cols):
 
 charFrames = load_frames(charTileset, 4, 3)
 
+conflictedDir = None
+
+WALLWIDTH = 35
+walls = [(114, 128, WALLWIDTH, 576), (387, 303, WALLWIDTH, 110), (387, 492, WALLWIDTH, 214), (500, 8, WALLWIDTH, 210), (500, 300, WALLWIDTH, 110), (500, 490, WALLWIDTH, 214), (684, 300, WALLWIDTH, 400), (872, 8, WALLWIDTH, 318), (232, 8, 666, WALLWIDTH), (115, 303, 195, WALLWIDTH), (500, 303, 400, WALLWIDTH), (115, 666, 595, WALLWIDTH), (115, 85, 35, WALLWIDTH), (150, 50, 35, WALLWIDTH), (185, 20, 35, WALLWIDTH)]
+# left, top, width, length
+
+wallRects = []
+for left, top, width, length in walls:
+    wallRect = pygame.Rect(left, top, width, length)
+    wallRects.append(wallRect)
+
+
 #Class that creates the main character
 class Character:
     def __init__(self, images:list, cords, speed):
@@ -48,8 +60,7 @@ class Character:
         self.images = images
         self.image = images[3]
         self.cords = cords
-        self.pos = images[3].get_rect().move(0, cords[1])
-        print(self.pos)
+        self.pos = images[3].get_rect().move(cords[0], cords[1])
         self.counter = 0
         self.lastUpdate = pygame.time.get_ticks()
         self.animDel = 200
@@ -61,22 +72,37 @@ class Character:
             self.image = self.images[self.counter]
 
     def move(self, dir):
+        directionMap = {"up": 3, "down": 0, "left": 1, "right": 2}
+        newPos = self.pos.copy()
+
         if dir == "up":
-            if self.pos.top > 0:
-                self.pos = self.pos.move(0, -self.speed)
+            if self.pos.top > 0 and not checkCollision(self.pos, wallRects):
+                newPos = self.pos.move(0, -self.speed)
             self.change_image(3)
         elif dir == "down":
-            if self.pos.bottom < HEIGHT:  # Asumiendo que la altura de la pantalla es 600
-                self.pos = self.pos.move(0, self.speed)
+            if self.pos.bottom < HEIGHT and not checkCollision(self.pos, wallRects):  # Asumiendo que la altura de la pantalla es 600
+                newPos = self.pos.move(0, self.speed)
             self.change_image(0)
         elif dir == "left":
-            if self.pos.left > 0:
-                self.pos = self.pos.move(-self.speed, 0)
+            if self.pos.left > 0 and not checkCollision(self.pos, wallRects):
+                newPos = self.pos.move(-self.speed, 0)
             self.change_image(1)
         elif dir == "right":
-            if self.pos.right < WIDTH:  # Asumiendo que el ancho de la pantalla es 800
-                self.pos = self.pos.move(self.speed, 0)
+            if self.pos.right < WIDTH and not checkCollision(self.pos, wallRects):  # Asumiendo que el ancho de la pantalla es 800
+                newPos = self.pos.move(self.speed, 0)
             self.change_image(2)
+
+        if not checkCollision(newPos, wallRects):
+            self.pos = newPos
+            self.change_image(directionMap[dir])
+        
+
+def checkCollision(charRect, wallRects):
+
+        for wallRect in wallRects:
+            if charRect.colliderect(wallRect):
+                return True
+        return False
 
 #Class that creates other objects
 class Games:
@@ -84,7 +110,7 @@ class Games:
         self.code = code
         self.image = image
         self.cords = cords
-        self.pos = image.get_rect().move(0, cords[1])    
+        self.pos = image.get_rect().move(cords[0], cords[1])    
     def go(self):
         match self.code:
             case 1: pass #Sitio para llamar a minijuegos
@@ -131,7 +157,6 @@ def run():
         screen.blit(background, p.pos, p.pos)
         for o in objects:
             screen.blit(o.image, o.cords)
-
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             p.move("up")
@@ -150,7 +175,6 @@ def run():
         for o in objects:
             if isinstance(o, Character):
                 o.move()
-        #screen.blit(o.image, o.pos)
         pygame.display.update()
         clock.tick(60)
 
