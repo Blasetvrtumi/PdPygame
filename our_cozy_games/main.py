@@ -41,17 +41,21 @@ def load_frames(tileset, rows, cols):
 
 charFrames = load_frames(charTileset, 4, 3)
 
-conflictedDir = None
-
 WALLWIDTH = 35
-walls = [(114, 128, WALLWIDTH, 576), (387, 303, WALLWIDTH, 110), (387, 492, WALLWIDTH, 214), (500, 8, WALLWIDTH, 210), (500, 300, WALLWIDTH, 110), (500, 490, WALLWIDTH, 214), (684, 300, WALLWIDTH, 400), (872, 8, WALLWIDTH, 318), (232, 8, 666, WALLWIDTH), (115, 303, 195, WALLWIDTH), (500, 303, 400, WALLWIDTH), (115, 666, 595, WALLWIDTH), (115, 85, 35, WALLWIDTH), (150, 50, 35, WALLWIDTH), (185, 20, 35, WALLWIDTH)]
+walls = [(114, 128, WALLWIDTH, 576), (387, 303, WALLWIDTH, 110), (387, 492, WALLWIDTH, 214), (500, 8, WALLWIDTH, 210), (500, 303, WALLWIDTH, 110), (500, 490, WALLWIDTH, 214), (684, 303, WALLWIDTH, 400), (872, 8, WALLWIDTH, 318), (232, 8, 666, WALLWIDTH), (115, 303, 195, WALLWIDTH), (500, 303, 400, WALLWIDTH), (115, 666, 595, WALLWIDTH), (115, 85, 35, WALLWIDTH), (150, 50, 35, WALLWIDTH), (185, 20, 35, WALLWIDTH), (620, 100, 160, 140), (206, 396, 70, 215), (588, 422, 40, 190)]
 # left, top, width, length
+
 
 wallRects = []
 for left, top, width, length in walls:
     wallRect = pygame.Rect(left, top, width, length)
     wallRects.append(wallRect)
 
+pygame.mixer.init()
+pygame.mixer.music.load("./static/src/mix/Hope.mp3")
+pygame.mixer.music.play(-1)
+
+stepsSound = pygame.mixer.Sound("./static/src/mix/Steps.mp3")
 
 #Class that creates the main character
 class Character:
@@ -64,6 +68,8 @@ class Character:
         self.counter = 0
         self.lastUpdate = pygame.time.get_ticks()
         self.animDel = 200
+        self.lastStep = pygame.time.get_ticks()
+        self.stepDelay = 1200
     def change_image(self, direction):
         now = pygame.time.get_ticks()
         if now - self.lastUpdate > self.animDel:
@@ -72,6 +78,11 @@ class Character:
             self.image = self.images[self.counter]
 
     def move(self, dir):
+        now = pygame.time.get_ticks()
+        if now - self.lastStep > self.stepDelay:
+            self.lastStep = now
+            stepsSound.play()
+
         directionMap = {"up": 3, "down": 0, "left": 1, "right": 2}
         newPos = self.pos.copy()
 
@@ -138,7 +149,7 @@ def run():
     screen = pygame.display.set_mode((WIDTH, HEIGHT)) #(horizontal, vertical)
     cheeckers = pygame.image.load(os.path.join(carpeta, 'cheeckers_1.png')).convert()
     tic_tac_toe = pygame.image.load(os.path.join(carpeta, 'tic_tac_toe_1.png')).convert()
-    notebook = pygame.image.load(os.path.join(carpeta, 'notebook_1.png')).convert()
+    notebook = pygame.image.load(os.path.join(carpeta, 'notebook.png')).convert_alpha()
 
 
     #Arreglar desde aquí    
@@ -167,7 +178,9 @@ def run():
         if keys[pygame.K_RIGHT]:
             p.move("right")
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.KEYUP:
+                stepsSound.stop()
+            elif event.type == pygame.QUIT:
                 sys.exit()
         screen.blit(p.image, p.pos)
 
