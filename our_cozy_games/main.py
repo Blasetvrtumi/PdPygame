@@ -60,7 +60,7 @@ def set_rects_in_map():
         games_rect = pygame.Rect(left, top, width, length)
         games_rects.append(games_rect)
 
-    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"), (140, 40, 60, 60, "AUCHH")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
+    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"), (140, 40, 60, 60, "AUCHH"), (140, 120, 60, 60, "AyAyayYy"), (140, 170, 50, 100, "El Principito – Capítulo 1")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
     games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar el primeros estos dos
     games_rects.append((588, 500, 40, 40))  #el desayuno
     counter = 0
