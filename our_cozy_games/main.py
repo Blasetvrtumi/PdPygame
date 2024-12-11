@@ -60,7 +60,7 @@ def set_rects_in_map():
         games_rect = pygame.Rect(left, top, width, length)
         games_rects.append(games_rect)
 
-    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
+    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"), (140, 40, 60, 60, "AUCHH")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
     games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar el primeros estos dos
     games_rects.append((588, 500, 40, 40))  #el desayuno
     counter = 0
@@ -163,7 +163,8 @@ def touched_special_object(charRect, simple, complex):
                 if i == len(complex):
                     menu_maker.settings_page()
                 else:
-                    pass #nota
+                    dict = complex[i]
+                    menu_maker.story_page(dict['tittle'], dict['message'])
                 
 
 #Class that creates other objects
