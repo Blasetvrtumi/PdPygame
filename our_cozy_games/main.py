@@ -42,31 +42,39 @@ def load_frames(tileset, rows, cols):
 
 charFrames = load_frames(charTileset, 4, 3)
 
-WALLWIDTH = 35
-walls = [(114, 128, WALLWIDTH, 576), (387, 303, WALLWIDTH, 110), (387, 492, WALLWIDTH, 214), (500, 8, WALLWIDTH, 210), (500, 303, WALLWIDTH, 110), (500, 490, WALLWIDTH, 214), (684, 303, WALLWIDTH, 400), (872, 8, WALLWIDTH, 318), (232, 8, 666, WALLWIDTH), (115, 303, 195, WALLWIDTH), (500, 303, 400, WALLWIDTH), (115, 666, 595, WALLWIDTH), (115, 85, 35, WALLWIDTH), (150, 50, 35, WALLWIDTH), (185, 20, 35, WALLWIDTH), (620, 100, 160, 140), (206, 396, 70, 215), (588, 422, 40, 190)]
-# left, top, width, length
+def set_rects_in_map():
+    WALLWIDTH = 35
+    walls = [(114, 128, WALLWIDTH, 576), (387, 303, WALLWIDTH, 110), (387, 492, WALLWIDTH, 214), (500, 8, WALLWIDTH, 210), (500, 303, WALLWIDTH, 110), (500, 490, WALLWIDTH, 214), (684, 303, WALLWIDTH, 400), (872, 8, WALLWIDTH, 318), (232, 8, 666, WALLWIDTH), (115, 303, 195, WALLWIDTH), (500, 303, 400, WALLWIDTH), (115, 666, 595, WALLWIDTH), (115, 85, 35, WALLWIDTH), (150, 50, 35, WALLWIDTH), (185, 20, 35, WALLWIDTH), (620, 100, 160, 140), (206, 396, 70, 215), (588, 422, 40, 190)]
+    # left, top, width, length
 
-wallRects = []
-for left, top, width, length in walls:
-    wallRect = pygame.Rect(left, top, width, length)
-    wallRects.append(wallRect)
+    wallRects = []
+    for left, top, width, length in walls:
+        wallRect = pygame.Rect(left, top, width, length)
+        wallRects.append(wallRect)
 
-games = [(206, 396, 70, 70),(206, 466, 70, 70), (620, 100, 60, 140)] #tictactoe, checkers and notebook
+    games = [(206, 396, 70, 70),(206, 466, 70, 70), (620, 100, 60, 140)] #tictactoe, checkers and notebook
 
-games_rects = []
-for left, top, width, length in games:
-    games_rect = pygame.Rect(left, top, width, length)
-    games_rects.append(games_rect)
+    games_rects = []
+    for left, top, width, length in games:
+        games_rect = pygame.Rect(left, top, width, length)
+        games_rects.append(games_rect)
 
-notes = [] #calcular chimenea, botella rota, estanterias, desayuno, botella
+    notes = [] #calcular chimenea, botella rota, estanterias, desayuno, botella
 
-notes_rects = []
-for left, top, width, length, tittle, message in notes:
-    notes_rect = pygame.Rect(left, top, width, length)
-    notes_rects.append({'rect': notes_rect, 'told': False, 'tittle': tittle, 'message': message})
+    counter = 0
+    notes_rects = []
+    all_rects = []
+    for left, top, width, length, tittle, message in notes:
+        notes_rect = pygame.Rect(left, top, width, length)
+        notes_rects.append({'id': counter, 'rect': notes_rect, 'told': False, 'tittle': tittle, 'message': message})
+        all_rects.append(notes_rects)
+        counter += 1
 
-bed_rect = None #pygame.Rect() #Encontrar cama
-notes_rects.append({'rect': bed_rect})
+    bed_rect = pygame.Rect(276, 38, 100, 50) #Encontrar cama
+    all_rects.append(bed_rect)
+
+    return wallRects, games_rects, notes_rects, all_rects
+wallRects, games_rects, notes_rects, all_rects = set_rects_in_map()
 
 pygame.mixer.init()
 pygame.mixer.music.load("./static/src/mix/Hope.mp3")
@@ -103,6 +111,8 @@ class Character:
         directionMap = {"up": 3, "down": 0, "left": 1, "right": 2}
         newPos = self.pos.copy()
 
+        if checkCollision(newPos, all_rects):
+            touched_special_object(newPos, all_rects, notes_rects)
         if dir == "up":
             if self.pos.top > 0 and not checkCollision(self.pos, wallRects,):
                 newPos = self.pos.move(0, -self.speed)
@@ -139,6 +149,14 @@ def launch_game(charRect, game_rects):
                 menu_maker.loading_page("Juego: ", i)
                 return True
         return False
+
+def touched_special_object(charRect, simple, complex):
+    for i in range(len(simple)):
+            if charRect.colliderect(simple[i]):
+                if i == len(complex):
+                    menu_maker.settings_page()
+                else:
+                    pass #nota
                 
 
 #Class that creates other objects
@@ -217,14 +235,10 @@ def run():
         pygame.display.update()
         clock.tick(60)
 
-    # Mantener la ventana abierta hasta que se cierre
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
 
-    pygame.quit()
+
+ 
 
 if __name__ == '__main__':
     run()
+    pygame.quit()
