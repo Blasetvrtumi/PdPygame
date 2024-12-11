@@ -2,6 +2,7 @@ import pygame
 import pygame_menu
 from pygame_menu import themes
 import main
+import sys
 
 #pygame.init()
 #surface = pygame.display.set_mode((600, 400))
@@ -74,7 +75,7 @@ def set_menu():
                     pygame.time.set_timer(update_loading, 0)
                     main.run()  # Llama a la función principal del módulo main
             if event.type == pygame.QUIT:
-                exit()
+                sys.exit()
 
         if mainmenu.is_enabled():
             mainmenu.update(events)
