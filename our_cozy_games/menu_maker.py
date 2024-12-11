@@ -10,16 +10,17 @@ import nonograma
 update_loading = pygame.USEREVENT + 0
 atras = False
 
-juegos = [{'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},{'nombre': None, 'programa': None}, {'nombre': "Nonograma", 'programa': nonograma}]
+juegos = [
+    {'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},
+    {'nombre': "Damas", 'programa': checkers}
+]
 
 def set_juegos(numero):
-    try:
+    if numero < len(juegos):
         nombre = juegos[numero]['nombre']
         programa = juegos[numero]['programa']
-        print(programa)
         return nombre, programa.run
-    
-    except:
+    else:
         error_page()
         return None, None
 
