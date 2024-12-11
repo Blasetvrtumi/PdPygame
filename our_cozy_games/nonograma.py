@@ -21,9 +21,12 @@ def get_elements():
     instructions_3 = small_font.render('Los numeros indican la ', True, text_color, )
     instructions_4 = small_font.render('cantidad de cuadrados ', True, text_color, )
     instructions_5 = small_font.render('a rellenar por fila.', True, text_color, )
+    house = pygame.image.load(os.path.join(carpeta, 'house_icon.png')).convert()
+    house_button = house.get_rect()
+    house_button.topleft = (750, 600)
     completed = False
     level = 0
-    return background, board, finished, black_space, completed, level, text, instructions_1, instructions_2, instructions_3, instructions_4, instructions_5
+    return background, board, finished, black_space, completed, level, text, instructions_1, instructions_2, instructions_3, instructions_4, instructions_5, house, house_button
 
 def get_cords_with_x(x, y):
     if y < 348:
@@ -75,7 +78,6 @@ def get_botton(completed):
         text = big_font.render('Rehacer', True, text_color, bg_color)
     else:
         text = big_font.render('Re-empezar', True, text_color, bg_color)
-    text.get_rect()
     text_rect = text.get_rect()
     text_rect.topleft = (700, 520)
     return text, text_rect
@@ -103,7 +105,7 @@ def run():
     clock = pygame.time.Clock()   #Needed for fps
 
     #Get elements needed
-    background, board, finished, black_space, completed, level, text, instructions_1, instructions_2, instructions_3, instructions_4, instructions_5 = get_elements()
+    background, board, finished, black_space, completed, level, text, instructions_1, instructions_2, instructions_3, instructions_4, instructions_5, house, house_button = get_elements()
     pintado = []
     print(completed)
 
@@ -120,6 +122,9 @@ def run():
     screen.blit(botton_text, botton)
     pygame.draw.rect(screen, text_color, botton, 2)
 
+    screen.blit(house, house_button)
+    pygame.draw.rect(screen, text_color, house_button, 2)
+
     pygame.display.flip() #botones cords x = 650, y = 460 - 525
 
     #Game loop
@@ -133,7 +138,7 @@ def run():
                 pos = pygame.mouse.get_pos() 
                 if not completed:
                     cords = pos_element(pos, level)
-                    print(cords)
+                    #print(cords)
                     if cords:
                         if cords not in pintado:
                             pintado.append(cords)
@@ -164,7 +169,8 @@ def run():
                     
                 pygame.display.flip()
 
-
+                if house_button.collidepoint(pos):
+                    running = False
 
 
 if __name__ == '__main__':
