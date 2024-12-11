@@ -2,6 +2,7 @@ import pygame
 import sys  #To manage exit
 import os   #To manage wd
 import menu_maker
+from messages import get_message
 
 WIDTH = 1100
 HEIGHT = 800
@@ -64,9 +65,9 @@ def set_rects_in_map():
     counter = 0
     notes_rects = []
     all_rects = []
-    for left, top, width, length, tittle, message in notes:
+    for left, top, width, length, tittle in notes:
         notes_rect = pygame.Rect(left, top, width, length)
-        notes_rects.append({'id': counter, 'rect': notes_rect, 'told': False, 'tittle': tittle, 'message': message})
+        notes_rects.append({'id': counter, 'rect': notes_rect, 'told': False, 'tittle': tittle, 'message': get_message(tittle)})
         all_rects.append(notes_rects)
         counter += 1
 
