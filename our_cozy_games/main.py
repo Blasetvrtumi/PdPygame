@@ -51,7 +51,7 @@ for left, top, width, length in walls:
     wallRect = pygame.Rect(left, top, width, length)
     wallRects.append(wallRect)
 
-games = [(206, 396, 70, 70),(206, 466, 70, 70)] #Poner mesa redonda:  (620, 100, 60, 60),  (680, 100, 60, 60)
+games = [(206, 396, 70, 70),(206, 466, 70, 70), (620, 100, 60, 140)] #tictactoe, checkers and notebook
 
 games_rects = []
 for left, top, width, length in games:
@@ -95,9 +95,7 @@ class Character:
         directionMap = {"up": 3, "down": 0, "left": 1, "right": 2}
         newPos = self.pos.copy()
 
-        if checkCollision(self.pos, wallRects):
-            print("Auch")
-        elif dir == "up":
+        if dir == "up":
             if self.pos.top > 0 and not checkCollision(self.pos, wallRects,):
                 newPos = self.pos.move(0, -self.speed)
             self.change_image(3)
@@ -118,24 +116,16 @@ class Character:
             self.pos = newPos
             self.change_image(directionMap[dir])
         elif checkCollision(newPos, games_rects):
-            print("Debería entrar")
-            launch_game(newPos, games_rects)
-        else:
-            print("Vaya golpe")
-            
-        
-        
+            launch_game(newPos, games_rects)              
 
 def checkCollision(charRect, wallRects):
 
         for wallRect in wallRects:
             if charRect.colliderect(wallRect):
-                #launch_game(charRect, game_rects)
                 return True
         return False
 
-def launch_game(charRect, game_rects):  
-        print("Dentro")  
+def launch_game(charRect, game_rects):   
         for i in range(len(game_rects)):
             if charRect.colliderect(game_rects[i]):
                 menu_maker.loading_page("Juego: ", i)
