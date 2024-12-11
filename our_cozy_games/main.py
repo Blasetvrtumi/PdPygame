@@ -2,7 +2,7 @@ import pygame
 import sys  #To manage exit
 import os   #To manage wd
 import menu_maker
-from messages import get_message
+from messages import get_message, get_tittle
 
 WIDTH = 1100
 HEIGHT = 800
@@ -60,8 +60,15 @@ def set_rects_in_map():
         games_rect = pygame.Rect(left, top, width, length)
         games_rects.append(games_rect)
 
-    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"),(684, 500, 40, 40,"Que pena de vista"), (140, 40, 60, 60, "AUCHH"), (140, 120, 60, 60, "AyAyayYy"), (140, 170, 50, 100, "El Principito – Capítulo 1")] #calcular botella, desayuno, ventana, chimenea, botella rota, estanterias, 
-    games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar primeros estos tres
+    notes = [(206, 536, 70, 70, "Cantidad de jugadores"),#No tocar estas tres
+             (588, 500, 40, 40, "Huele de maravilla"),  #Luego se unen a los de
+             (684, 500, 40, 40,"Que pena de vista"),    #los juegos por coordenadas
+             (140, 40, 60, 60, "AUCHH"), #chimenea
+             (140, 120, 60, 60, "AyAyayYy"), #botella_rota
+             (140, 170, 50, 100, "El Principito – Capítulo 1"), #estantería 1
+             (476, 38, 50, 100, get_tittle('name')),#estantería 2
+              (535, 338, 400, 25, get_tittle('background'))] #botellas
+    games_rects.append((206, 536, 70, 70)) #la botella de la mesa
     games_rects.append((588, 500, 40, 40))  #el desayuno
     games_rects.append((684, 500, 40, 40))  #la ventana
     counter = 0
@@ -183,7 +190,6 @@ def touched_special_object(charRect, simple, complex):
                     menu_maker.settings_page()
                 else:
                     dict = complex[i]
-                    print(dict['told'])
                     if not dict['told']:
                         menu_maker.story_page(dict['tittle'], dict['message'], (x,y), i)
                 
