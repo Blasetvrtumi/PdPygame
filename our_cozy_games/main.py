@@ -1,6 +1,7 @@
 import pygame
 import sys  #To manage exit
 import os   #To manage wd
+import menu_maker
 
 WIDTH = 1100
 HEIGHT = 800
@@ -45,11 +46,19 @@ WALLWIDTH = 35
 walls = [(114, 128, WALLWIDTH, 576), (387, 303, WALLWIDTH, 110), (387, 492, WALLWIDTH, 214), (500, 8, WALLWIDTH, 210), (500, 303, WALLWIDTH, 110), (500, 490, WALLWIDTH, 214), (684, 303, WALLWIDTH, 400), (872, 8, WALLWIDTH, 318), (232, 8, 666, WALLWIDTH), (115, 303, 195, WALLWIDTH), (500, 303, 400, WALLWIDTH), (115, 666, 595, WALLWIDTH), (115, 85, 35, WALLWIDTH), (150, 50, 35, WALLWIDTH), (185, 20, 35, WALLWIDTH), (620, 100, 160, 140), (206, 396, 70, 215), (588, 422, 40, 190)]
 # left, top, width, length
 
-
 wallRects = []
 for left, top, width, length in walls:
     wallRect = pygame.Rect(left, top, width, length)
     wallRects.append(wallRect)
+
+games = [(206, 396, 70, 70),(206, 466, 70, 70)] #Poner mesa redonda:  (620, 100, 60, 60),  (680, 100, 60, 60)
+
+games_rects = []
+for left, top, width, length in games:
+    games_rect = pygame.Rect(left, top, width, length)
+    games_rects.append(games_rect)
+
+#notes = [()]
 
 pygame.mixer.init()
 pygame.mixer.music.load("./static/src/mix/Hope.mp3")
@@ -86,8 +95,10 @@ class Character:
         directionMap = {"up": 3, "down": 0, "left": 1, "right": 2}
         newPos = self.pos.copy()
 
-        if dir == "up":
-            if self.pos.top > 0 and not checkCollision(self.pos, wallRects):
+        if checkCollision(self.pos, wallRects):
+            print("Auch")
+        elif dir == "up":
+            if self.pos.top > 0 and not checkCollision(self.pos, wallRects,):
                 newPos = self.pos.move(0, -self.speed)
             self.change_image(3)
         elif dir == "down":
@@ -106,14 +117,31 @@ class Character:
         if not checkCollision(newPos, wallRects):
             self.pos = newPos
             self.change_image(directionMap[dir])
+        elif checkCollision(newPos, games_rects):
+            print("Debería entrar")
+            launch_game(newPos, games_rects)
+        else:
+            print("Vaya golpe")
+            
+        
         
 
 def checkCollision(charRect, wallRects):
 
         for wallRect in wallRects:
             if charRect.colliderect(wallRect):
+                #launch_game(charRect, game_rects)
                 return True
         return False
+
+def launch_game(charRect, game_rects):  
+        print("Dentro")  
+        for i in range(len(game_rects)):
+            if charRect.colliderect(game_rects[i]):
+                menu_maker.loading_page("Juego: ", i)
+                return True
+        return False
+                
 
 #Class that creates other objects
 class Games:

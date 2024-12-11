@@ -12,7 +12,7 @@ atras = False
 juegos = [{'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe}]
 
 def set_juegos(numero):
-    if juegos[numero]:
+    if numero < len(juegos):
         nombre = juegos[numero]['nombre']
         programa = juegos[numero]['programa']
         return nombre, programa.run
@@ -31,7 +31,7 @@ def lanzar_main():
 
 def crear_carga_main(text = None):    
     atras = False
-    loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_DARK)
+    loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_ORANGE)
     loading.add.progress_bar("Progress", progressbar_id="1", default=0, width=200)
     if text:
         loading.add.label(text)
@@ -88,7 +88,7 @@ def settings_page():
     set_menu()
     
 def create_error_page():
-    loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_DARK)
+    loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_ORANGE)
     loading.add.progress_bar("Progress", progressbar_id="1", default=0, width=200)
     loading.add.label("Aún no está operativo ese juego")
     loading.add.button("Volver", lanzar_main)
