@@ -1,6 +1,6 @@
 import pygame
 import os   #To manage wd
-from menu_maker import loading_page
+#from menu_maker import loading_page
 
 WIDTH = 600
 HEIGHT = 800
@@ -155,9 +155,11 @@ def run():
                     text = small_font.render('Ha ganado ' + ganador, True, text_color, bg_color)
                     screen.blit(text, (75, 700))
                     pygame.display.flip()
-                    loading_page('Ha ganado ' + ganador, run, True) #Anuncia resultado y lleva al programa principal         
+                    #loading_page('Ha ganado ' + ganador, run, True) #Anuncia resultado y lleva al programa principal 
+                    running = False        
 
-    pygame.quit()
+    
 
 if __name__ == '__main__':
     run()
+    pygame.quit()

@@ -53,7 +53,8 @@ def run():
             if event.type == pygame.QUIT:
                 running = False
 
-    pygame.quit()
+    
 
 if __name__ == '__main__':
     run()
+    pygame.quit()

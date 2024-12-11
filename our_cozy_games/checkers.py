@@ -18,7 +18,7 @@ class Piece:
 
 def get_elements():
     '''Gets all the elements we need in the correct format.'''
-    carpeta = './our_cozy_games/static/src'
+    carpeta = './static/src'
     background = pygame.image.load(os.path.join(carpeta, 'big_cheeckers (1).png')).convert()
     white_piece = pygame.image.load(os.path.join(carpeta, 'cheeckers_white_piece.png')).convert()
     black_piece = pygame.image.load(os.path.join(carpeta, 'cheeckers_black_piece.png')).convert()
@@ -47,50 +47,52 @@ def comible(piece, objects):
         for o in list:
             if o.cords == piece.ords: #+- diferencia'''
     pass
-    
-#Screen settings
-pygame.init()
-screen = pygame.display.set_mode((WIDTH,HEIGHT))
-clock = pygame.time.Clock()   #Needed for fps
 
-#Get elements needed
-background, white_piece, black_piece = get_elements()
-black_pieces = []
-white_pieces = []
-for i in range(4): #12 piezas
-    white_pieces.append(Piece(white_piece, (50, i*175+50))) 
-    black_pieces.append(Piece(black_piece, (495, i*175+137.5)))
-for i in range(4): #12 piezas
-    white_pieces.append(Piece(white_piece, (140, i*175+137.5))) 
-    black_pieces.append(Piece(black_piece, (585, i*175+50)))
-for i in range(4): #12 piezas
-    white_pieces.append(Piece(white_piece, (230, i*175+50)))
-    black_pieces.append(Piece(black_piece, (675, i*175+137.5)))
-objects = [white_pieces, black_pieces]
-turn = 0
+def run():    
+    #Screen settings
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH,HEIGHT))
+    clock = pygame.time.Clock()   #Needed for fps
 
-
-# Mantener la ventana abierta hasta que se cierre
-running = True
-while running:
-    screen.blit(background, (0,0))
-    for l in objects:
-        for o in l:
-            screen.blit(o.image, o.cords)
-    pygame.display.flip()
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-        elif event.type == pygame.MOUSEBUTTONUP:
-            pos = pygame.mouse.get_pos() 
-            piece = clicked_piece(objects, pos, turn)
-            if piece:
-                piece.move(comible(piece, objects))
-            #if game_finished():
-                #pass
+    #Get elements needed
+    background, white_piece, black_piece = get_elements()
+    black_pieces = []
+    white_pieces = []
+    for i in range(4): #12 piezas
+        white_pieces.append(Piece(white_piece, (50, i*175+50))) 
+        black_pieces.append(Piece(black_piece, (495, i*175+137.5)))
+    for i in range(4): #12 piezas
+        white_pieces.append(Piece(white_piece, (140, i*175+137.5))) 
+        black_pieces.append(Piece(black_piece, (585, i*175+50)))
+    for i in range(4): #12 piezas
+        white_pieces.append(Piece(white_piece, (230, i*175+50)))
+        black_pieces.append(Piece(black_piece, (675, i*175+137.5)))
+    objects = [white_pieces, black_pieces]
+    turn = 0
 
 
+    # Mantener la ventana abierta hasta que se cierre
+    running = True
+    while running:
+        screen.blit(background, (0,0))
+        for l in objects:
+            for o in l:
+                screen.blit(o.image, o.cords)
+        pygame.display.flip()
 
-pygame.quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos() 
+                piece = clicked_piece(objects, pos, turn)
+                if piece:
+                    piece.move(comible(piece, objects))
+                #if game_finished():
+                    #pass
+
+
+if __name__ == '__main__':
+    run()
+    pygame.quit()

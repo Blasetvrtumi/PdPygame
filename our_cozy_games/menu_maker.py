@@ -4,9 +4,21 @@ from pygame_menu import themes
 import main
 from main_menu import set_menu
 import textwrap
+import tic_tac_toe
 
 update_loading = pygame.USEREVENT + 0
 atras = False
+
+juegos = [{'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe}]
+
+def set_juegos(numero):
+    if juegos[numero]:
+        nombre = juegos[numero]['nombre']
+        programa = juegos[numero]['programa']
+        return nombre, programa.run
+    else:
+        error_page()
+        return None, None
 
 def lanzar_carga():
     pygame.time.set_timer(update_loading, 30)
@@ -27,27 +39,24 @@ def crear_carga_main(text = None):
     loading.add.button("Ir a rpg", lanzar_main)
     return loading
 
-def crear_carga_juego(text = None):    
-    atras = False
-    loading = pygame_menu.Menu('Loading the Game...', 600, 400, theme=themes.THEME_DARK)
-    loading.add.progress_bar("Progress", progressbar_id="1", default=0, width=200)
-    if text:
-        loading.add.label(text)
-        loading.add.button("Entendido", lanzar_main)
-    loading.add.button("Jugar otra", lanzar_carga)
-    return loading
-
 def loading_page(text = None, programa = None, de_juego = False):   
+    if isinstance(programa, (int, float)):
+        nombre, juego = set_juegos(programa)
+        print(juego)
+        if not juego:
+            error_page()
+        else:
+            programa = juego
+            text = text + nombre
+
     global atras
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
-    if de_juego:
-        loading = crear_carga_juego(text)
-    else:
-        loading = crear_carga_main(text)
+
+    loading = crear_carga_main(text)
 
     while True:
         events = pygame.event.get()
@@ -62,6 +71,8 @@ def loading_page(text = None, programa = None, de_juego = False):
                         programa()
                     else:
                         main.run()  # Lanza rpg
+                    progress.set_value(0)
+
             if event.type == pygame.QUIT:
                 exit()
 
@@ -146,7 +157,8 @@ def story_page(title, text):
         pygame.display.update()
 
 if __name__ == '__main__':
-    #loading_page()
+    #loading_page("Juego: Tres en raya (2p).", tic_tac_toe.run)
+    loading_page("Juego: ", 0)
     #settings_page()
-    story_page("Dia 1 de muchos", "Ya he perdido la cuenta de la de días que llevo encerrado. Que llevo sin respirar aire fresco porque no hay aire fresco. Desde ese apocalipsis que hizo que la vegetación se apoderara del planeta, me es imposible saber qué pasa ahí fuera. Solo tengo un par de juegos que tenía guardados para entretenerme. A veces incluso finjo que soy otra persona y juego conmigo al tres en raya...")
+    #story_page("Dia 1 de muchos", "Ya he perdido la cuenta de la de días que llevo encerrado. Que llevo sin respirar aire fresco porque no hay aire fresco. Desde ese apocalipsis que hizo que la vegetación se apoderara del planeta, me es imposible saber qué pasa ahí fuera. Solo tengo un par de juegos que tenía guardados para entretenerme. A veces incluso finjo que soy otra persona y juego conmigo al tres en raya...")
     #error_page()
