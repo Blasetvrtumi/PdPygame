@@ -58,7 +58,15 @@ for left, top, width, length in games:
     games_rect = pygame.Rect(left, top, width, length)
     games_rects.append(games_rect)
 
-#notes = [()]
+notes = [] #calcular chimenea, botella rota, estanterias, desayuno, botella
+
+notes_rects = []
+for left, top, width, length, tittle, message in notes:
+    notes_rect = pygame.Rect(left, top, width, length)
+    notes_rects.append({'rect': notes_rect, 'told': False, 'tittle': tittle, 'message': message})
+
+bed_rect = None #pygame.Rect() #Encontrar cama
+notes_rects.append({'rect': bed_rect})
 
 pygame.mixer.init()
 pygame.mixer.music.load("./static/src/mix/Hope.mp3")
