@@ -15,6 +15,7 @@ def set_juegos(numero):
     if numero < len(juegos):
         nombre = juegos[numero]['nombre']
         programa = juegos[numero]['programa']
+        print(programa)
         return nombre, programa.run
     else:
         error_page()
@@ -42,7 +43,6 @@ def crear_carga_main(text = None):
 def loading_page(text = None, programa = None, de_juego = False):   
     if isinstance(programa, (int, float)):
         nombre, juego = set_juegos(programa)
-        print(juego)
         if not juego:
             error_page()
         else:
@@ -50,6 +50,7 @@ def loading_page(text = None, programa = None, de_juego = False):
             text = text + nombre
 
     global atras
+    atras = False
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))

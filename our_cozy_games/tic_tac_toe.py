@@ -95,7 +95,7 @@ def es_fin_de_partida(espacios):
             if espacios[(150, 460)] == espacios[(250, 360)] == espacios[(360, 250)]:
                 bool = True
                 ganador = espacios[(360, 250)]
-        return bool, ganador
+    return bool, ganador
 
 def show_in_screen(elements, screen):
     for cords, image in elements:
@@ -149,7 +149,7 @@ def run():
                     screen.blit(text, (75, 700))
                 
                 pygame.display.flip()
-
+ 
                 bool, ganador = es_fin_de_partida(espacios)
                 if bool:
                     text = small_font.render('Ha ganado ' + ganador, True, text_color, bg_color)
