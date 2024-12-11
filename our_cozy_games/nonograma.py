@@ -17,7 +17,7 @@ def get_elements():
     text = big_font.render('Nonograma', True, text_color, )
     small_font = pygame.font.Font('freesansbold.ttf', 32)
     instructions_1 = small_font.render('Clica en el cuadrado que ', True, text_color,) 
-    instructions_2 = small_font.render('quieras rellenar. ', True, text_color, )
+    instructions_2 = small_font.render('quieras rellenar/limpiar. ', True, text_color, )
     instructions_3 = small_font.render('Los numeros indican la ', True, text_color, )
     instructions_4 = small_font.render('cantidad de cuadrados ', True, text_color, )
     instructions_5 = small_font.render('a rellenar por fila.', True, text_color, )
@@ -69,6 +69,16 @@ def get_cords_with_pos(x, y):
     else:
         return get_cords_with_x(487, y)
 
+def get_botton(completed):
+    big_font = pygame.font.Font('freesansbold.ttf', 42)
+    if completed:
+        text = big_font.render('Rehacer', True, text_color, bg_color)
+    else:
+        text = big_font.render('Re-empezar', True, text_color, bg_color)
+    text.get_rect()
+    text_rect = text.get_rect()
+    text_rect.topleft = (700, 520)
+    return text, text_rect
 
 
 def pos_element(pos, level):
@@ -82,21 +92,9 @@ def pos_element(pos, level):
         return get_cords_with_pos(x, y)
 
 def fin_del_juego(posiciones):
-    print(posiciones)
-    comparativa = posiciones == {(487, 438), (307, 318), (397, 468), (427, 438), (277, 588), (487, 468), (247, 468), (457, 558), (307, 348), (427, 468), (397, 318), (487, 498), (277, 438), (247, 318), (367, 588), (457, 588), (457, 408), (427, 498), (427, 318), (307, 558), (277, 468), (247, 348), (217, 408), (457, 438), (307, 588), (307, 408), (427, 528), (427, 348), (277, 318), (487, 558), (487, 378), (367, 468), (457, 468), (217, 438), (307, 438), (427, 558), (397, 588), (487, 588), (487, 408), (277, 348), (277, 528), (247, 408), (367, 318), (217, 468), (337, 588), (427, 588), (427, 408), (307, 468), (247, 438), (367, 348)}
-    
-    '''{(217, 408), (217, 438), (217, 468),
-                          (247, 318), (247, 348), (247, 408), (247, 438), (247, 468), 
-                          (277, 318), (277, 348), (277, 438), (277, 468), (277, 528), (277, 588),
-                          (307, 318), (307, 348), (307, 438), (307, 468), (307, 558), (307, 588),
-                          (337, 588),
-                          (367, 318), (265, 348), (265, 468), (265, 588),
-                          (397, 318), (397, 468), (397, 588),
-                          (427, 318), (427, 348), (427, 408), (427, 438), (427, 468), (427, 498), (427, 528), (427, 558), (427, 588),
-                          (457, 408), (457, 438), (457, 468), (457, 558), (457, 588),
-                          (487, 378), (487, 408), (487, 438), (487, 468), (487, 498), (487, 558), (487, 588)}'''
-    print(comparativa)
-    return comparativa
+    return posiciones == {(487, 438), (307, 318), (397, 468), (427, 438), (277, 588), (487, 468), (247, 468), (457, 558), (307, 348), (427, 468), (397, 318), (487, 498), (277, 438), (247, 318), (367, 588), (457, 588), (457, 408), (427, 498), (427, 318), (307, 558), (277, 468), (247, 348), (217, 408), (457, 438), (307, 588), (307, 408), (427, 528), (427, 348), (277, 318), (487, 558), (487, 378), (367, 468), (457, 468), (217, 438), (307, 438), (427, 558), (397, 588), (487, 588), (487, 408), (277, 348), (277, 528), (247, 408), (367, 318), (217, 468), (337, 588), (427, 588), (427, 408), (307, 468), (247, 438), (367, 348)}
+
+
 
 def run():
     #Screen settings
@@ -107,16 +105,21 @@ def run():
     #Get elements needed
     background, board, finished, black_space, completed, level, text, instructions_1, instructions_2, instructions_3, instructions_4, instructions_5 = get_elements()
     pintado = []
+    print(completed)
 
     #Show in screen before loop
     screen.blit(background,(0,0))
     screen.blit(board, (125,175))
     screen.blit(text, (700, 150))
-    screen.blit(instructions_1, (650, 290))
-    screen.blit(instructions_2, (650, 325))
-    screen.blit(instructions_3, (650, 460))
-    screen.blit(instructions_4, (650, 495))
-    screen.blit(instructions_5, (650, 525))
+    screen.blit(instructions_1, (650, 225))
+    screen.blit(instructions_2, (650, 260))
+    screen.blit(instructions_3, (650, 360))
+    screen.blit(instructions_4, (650, 395))
+    screen.blit(instructions_5, (650, 430))
+    botton_text, botton = get_botton(completed)
+    screen.blit(botton_text, botton)
+    pygame.draw.rect(screen, text_color, botton, 2)
+
     pygame.display.flip() #botones cords x = 650, y = 460 - 525
 
     #Game loop
@@ -127,8 +130,8 @@ def run():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos() 
                 if not completed:
-                    pos = pygame.mouse.get_pos() 
                     cords = pos_element(pos, level)
                     print(cords)
                     if cords:
@@ -145,9 +148,23 @@ def run():
                             print('Lo has hecho')
                             screen.blit(finished, (100,150))
                             completed = True
-                        pygame.display.flip()
+                            botton_text, botton = get_botton(completed)
+                            screen.blit(botton_text, botton)
+                            pygame.draw.rect(screen, text_color, botton, 2)
+                            
                     
-                    #Manejar botones rehacer y atras
+                #Manejar botones rehacer y atras
+                if botton.collidepoint(pos):
+                    pintado.clear()
+                    completed = False
+                    screen.blit(board, (125,175))
+                    botton_text, botton = get_botton(completed)
+                    screen.blit(botton_text, botton)
+                    pygame.draw.rect(screen, text_color, botton, 2)
+                    
+                pygame.display.flip()
+
+
 
 
 if __name__ == '__main__':
