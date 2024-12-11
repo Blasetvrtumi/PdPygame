@@ -60,15 +60,16 @@ def set_rects_in_map():
         games_rect = pygame.Rect(left, top, width, length)
         games_rects.append(games_rect)
 
-    notes = [(206, 536, 70, 70, "Cantidad de jugadores")] #calcular chimenea, botella rota, estanterias, desayuno, botella
-    games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar el primer
+    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
+    games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar el primeros estos dos
+    games_rects.append((588, 500, 40, 40))  #el desayuno
     counter = 0
     notes_rects = []
     all_rects = []
     for left, top, width, length, tittle in notes:
-        notes_rect = pygame.Rect(left, top, width, length)
-        notes_rects.append({'id': counter, 'rect': notes_rect, 'told': False, 'tittle': tittle, 'message': get_message(tittle)})
-        all_rects.append(pygame.Rect(left, top, width, length))
+        note_rect = pygame.Rect(left, top, width, length)
+        notes_rects.append({'id': counter, 'rect': note_rect, 'told': False, 'tittle': tittle, 'message': get_message(tittle)})
+        all_rects.append(note_rect)#pygame.Rect(left, top, width, length)
         counter += 1
 
     bed_rect = pygame.Rect(276, 38, 100, 50) #Encontrar cama
@@ -135,7 +136,7 @@ class Character:
             self.pos = newPos
             self.change_image(directionMap[dir])
         elif checkCollision(newPos, games_rects):
-            launch_game(newPos, games_rects, notes_rects[0])              
+            launch_game(newPos, games_rects, notes_rects)              
 
 def checkCollision(charRect, wallRects):
 
@@ -144,11 +145,13 @@ def checkCollision(charRect, wallRects):
                 return True
         return False
 
-def launch_game(charRect, game_rects, note_dict): 
-        if charRect.colliderect(note_dict['rect']):
-            menu_maker.story_page(note_dict['tittle'], note_dict['message'])
-            return True
-        for i in range(len(game_rects)):
+def launch_game(charRect, game_rects, note_list): 
+        for i in range(2):
+            note_dict = note_list[i]
+            if charRect.colliderect(note_dict['rect']):
+                menu_maker.story_page(note_dict['tittle'], note_dict['message'])
+                return True
+        for i in range(len(game_rects)-2):
             if charRect.colliderect(game_rects[i]):
                 menu_maker.loading_page("Juego: ", i)
                 return True
