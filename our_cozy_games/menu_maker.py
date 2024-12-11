@@ -10,6 +10,7 @@ import checkers
 
 update_loading = pygame.USEREVENT + 0
 atras = False
+a_devolver = None
 
 juegos = [
     {'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},
@@ -44,11 +45,11 @@ def crear_carga_main(text = None):
     loading.add.button("Ir a rpg", lanzar_main)
     return loading
 
-def loading_page(text = None, programa = None, de_juego = False):   
+def loading_page(text = None, programa = None, cords_main = None):   
     if isinstance(programa, (int, float)):
         nombre, juego = set_juegos(programa)
         if not juego:
-            error_page()
+            error_page(cords_main)
         else:
             programa = juego
             text = text + nombre
@@ -75,7 +76,10 @@ def loading_page(text = None, programa = None, de_juego = False):
                     if programa and not atras:
                         programa()
                     else:
-                        main.run()  # Lanza rpg
+                        if cords_main:
+                            main.run(cords_main)  # Lanza rpg
+                        else:
+                            main.run()
                     progress.set_value(0)
 
             if event.type == pygame.QUIT:
@@ -99,7 +103,7 @@ def create_error_page():
     loading.add.button("Volver", lanzar_main)
     return loading
 
-def error_page():
+def error_page(cords_main = None):
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))
@@ -116,8 +120,10 @@ def error_page():
                 progress.set_value(progress.get_value() + 1)
                 if progress.get_value() == 100:
                     pygame.time.set_timer(update_loading, 0)
-                    print(atras)
-                    main.run()  # Lanza rpg
+                    if cords_main:
+                        main.run(cords_main)  # Lanza rpg
+                    else:
+                        main.run()
             if event.type == pygame.QUIT:
                 exit()
 
@@ -130,16 +136,27 @@ def error_page():
         pygame.display.update()
 
 
+def lanzar():
+    global a_devolver
+    if a_devolver:
+        cords, index = a_devolver
+        main.run(cords, index)
+    else:
+        main.run()
+    a_devolver = None
+
 def create_story_page(title, text):
     size = 35
     loading = pygame_menu.Menu(title, 600, 400, theme=themes.THEME_DEFAULT)
     texts = textwrap.wrap(text, width=size, break_long_words=False) 
     for line in texts:
         loading.add.label(line)
-    loading.add.button("Volver", main.run)
+    loading.add.button("Volver", lanzar)
     return loading
 
-def story_page(title, text):
+def story_page(title, text, cords_main = None, index = None):
+    global a_devolver
+    a_devolver = (cords_main, index)
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))

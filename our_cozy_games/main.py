@@ -60,10 +60,10 @@ def set_rects_in_map():
         games_rect = pygame.Rect(left, top, width, length)
         games_rects.append(games_rect)
 
-    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"),(684, 500, 40, 40,"Que pena de vista"), (140, 40, 60, 60, "AUCHH"), (140, 120, 60, 60, "AyAyayYy"), (140, 170, 50, 100, "El Principito – Capítulo 1")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
+    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"),(684, 500, 40, 40,"Que pena de vista"), (140, 40, 60, 60, "AUCHH"), (140, 120, 60, 60, "AyAyayYy"), (140, 170, 50, 100, "El Principito – Capítulo 1")] #calcular botella, desayuno, ventana, chimenea, botella rota, estanterias, 
     games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar primeros estos tres
     games_rects.append((588, 500, 40, 40))  #el desayuno
-    games_rects.append((684, 500, 40, 40))
+    games_rects.append((684, 500, 40, 40))  #la ventana
     counter = 0
     notes_rects = []
     all_rects = []
@@ -137,7 +137,7 @@ class Character:
             self.pos = newPos
             self.change_image(directionMap[dir])
         elif checkCollision(newPos, games_rects):
-            launch_game(newPos, games_rects, notes_rects)              
+            launch_game(newPos, games_rects, notes_rects, dir)              
 
 def checkCollision(charRect, wallRects):
 
@@ -146,26 +146,46 @@ def checkCollision(charRect, wallRects):
                 return True
         return False
 
-def launch_game(charRect, game_rects, note_list): 
+def forgot_notes():
+    global notes_rects
+    for note in notes_rects:
+        note['told'] = False
+
+def launch_game(charRect, game_rects, note_list, dir): 
+        x,y,l,w = charRect
+        if dir == "up":
+            y += 5
+        if dir == "down":
+            y -= 5
+        if dir == "left":
+            x += 5
+        if dir == "right":
+            x -=5
+
         for i in range(3):
             note_dict = note_list[i]
             if charRect.colliderect(note_dict['rect']):
-                menu_maker.story_page(note_dict['tittle'], note_dict['message'])
+                menu_maker.story_page(note_dict['tittle'], note_dict['message'], (x,y), i)
                 return True
         for i in range(len(game_rects)-2):
             if charRect.colliderect(game_rects[i]):
-                menu_maker.loading_page("Juego: ", i)
+                forgot_notes()
+                menu_maker.loading_page("Juego: ", i, (x,y))
                 return True
         return False
 
 def touched_special_object(charRect, simple, complex):
+    x,y,l,w = charRect
     for i in range(len(simple)):
             if charRect.colliderect(simple[i]):
                 if i == len(complex):
+                    forgot_notes()
                     menu_maker.settings_page()
                 else:
                     dict = complex[i]
-                    menu_maker.story_page(dict['tittle'], dict['message'])
+                    print(dict['told'])
+                    if not dict['told']:
+                        menu_maker.story_page(dict['tittle'], dict['message'], (x,y), i)
                 
 
 #Class that creates other objects
@@ -178,9 +198,12 @@ class Games:
     def go(self):
         match self.code:
             case 1: pass #Sitio para llamar a minijuegos
-def run():
+def run(char_cord = (350, 100), mensaje_leido = None):
     WIDTH = 1100
     HEIGHT = 800
+    if mensaje_leido:
+        global notes_rects
+        notes_rects[mensaje_leido]['told'] = True
 
     pygame.init()
 
@@ -210,7 +233,7 @@ def run():
     pygame.display.flip()
 
     #See how to create player object 
-    p = Character(charFrames, (350, 100), 3)   #create the player object
+    p = Character(charFrames, char_cord, 3)   #create the player object
     tictactoe = Games(tic_tac_toe, (215, 400), None) #Conectar con módulo
     checkers = Games(cheeckers, (215, 500), None) #Conectar con módulo
     notebook = Games(notebook, (640, 150), None) #Conectar con módulo
