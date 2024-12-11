@@ -60,9 +60,10 @@ def set_rects_in_map():
         games_rect = pygame.Rect(left, top, width, length)
         games_rects.append(games_rect)
 
-    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"), (140, 40, 60, 60, "AUCHH"), (140, 120, 60, 60, "AyAyayYy"), (140, 170, 50, 100, "El Principito – Capítulo 1")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
-    games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar el primeros estos dos
+    notes = [(206, 536, 70, 70, "Cantidad de jugadores"), (588, 500, 40, 40, "Huele de maravilla"),(684, 500, 40, 40,"Que pena de vista"), (140, 40, 60, 60, "AUCHH"), (140, 120, 60, 60, "AyAyayYy"), (140, 170, 50, 100, "El Principito – Capítulo 1")] #calcular botella, desayuno, chimenea, botella rota, estanterias, 
+    games_rects.append((206, 536, 70, 70)) #la botella de la mesa, dejar primeros estos tres
     games_rects.append((588, 500, 40, 40))  #el desayuno
+    games_rects.append((684, 500, 40, 40))
     counter = 0
     notes_rects = []
     all_rects = []
@@ -146,7 +147,7 @@ def checkCollision(charRect, wallRects):
         return False
 
 def launch_game(charRect, game_rects, note_list): 
-        for i in range(2):
+        for i in range(3):
             note_dict = note_list[i]
             if charRect.colliderect(note_dict['rect']):
                 menu_maker.story_page(note_dict['tittle'], note_dict['message'])
