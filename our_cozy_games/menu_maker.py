@@ -5,19 +5,21 @@ import main
 from main_menu import set_menu
 import textwrap
 import tic_tac_toe
+import nonograma
 
 update_loading = pygame.USEREVENT + 0
 atras = False
 
-juegos = [{'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe}]
+juegos = [{'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},{'nombre': None, 'programa': None}, {'nombre': "Nonograma", 'programa': nonograma}]
 
 def set_juegos(numero):
-    if numero < len(juegos):
+    try:
         nombre = juegos[numero]['nombre']
         programa = juegos[numero]['programa']
         print(programa)
         return nombre, programa.run
-    else:
+    
+    except:
         error_page()
         return None, None
 
