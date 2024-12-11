@@ -136,6 +136,7 @@ def create_story_page(title, text):
     texts = textwrap.wrap(text, width=size, break_long_words=False) 
     for line in texts:
         loading.add.label(line)
+    loading.add.button("Volver", main.run)
     return loading
 
 def story_page(title, text):
