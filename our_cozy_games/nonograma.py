@@ -36,7 +36,7 @@ def get_cords_with_x(x, y):
     elif y < 408:
         return (x, 378)
     elif y < 438:
-        return (x, 408) #378, 408, 438, 468, 498, 558, 588
+        return (x, 408)
     elif y < 468:
         return (x, 438)
     elif y < 498:
