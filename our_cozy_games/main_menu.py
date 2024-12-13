@@ -35,10 +35,35 @@ def create_main_menu(nombre, start_the_game, level_menu):
     mainmenu.add.button('Quitar', pygame_menu.events.EXIT)
     return mainmenu
 
+def seleccionado_moreno():
+    try:
+        with open('selected_character.txt', 'r') as f:
+            selected_character = f.read()
+        print(selected_character == 'brunette_tileset.png')
+        return selected_character == 'brunette_tileset.png'
+    except:
+        return False
+
+def seleccionado_sin_botellas():
+    try:
+        with open('selected_background.txt', 'r') as f:
+            selected_background = f.read()
+        print(selected_background == 'background_1.jpg')
+        return selected_background == 'background_1.jpg'
+    except:
+        return False
+
 def crear_menu_seleccion():
     level = pygame_menu.Menu('Select your preferences', 600, 400, theme=themes.THEME_BLUE)
-    level.add.selector('Color de pelo :', [('Moreno', 'brunette_tileset.png'), ('Castaño', 'brown_hair.png')], onchange=set_hair_color)
-    level.add.selector('Fondo :', [('Con botellas', 'background_2.jpg'), ('Sin botellas', 'background_1.jpg')], onchange=set_background)
+    if seleccionado_moreno():
+        level.add.selector('Color de pelo :', [('Moreno', 'brunette_tileset.png'), ('Castaño', 'brown_hair.png')], onchange=set_hair_color)
+    else:
+        level.add.selector('Color de pelo :', [('Castaño', 'brown_hair.png'), ('Moreno', 'brunette_tileset.png')], onchange=set_hair_color)
+    if seleccionado_sin_botellas():
+        level.add.selector('Fondo :', [('Sin botellas', 'background_1.jpg'), ('Con botellas', 'background_2.jpg')], onchange=set_background)
+    else:
+        level.add.selector('Fondo :', [('Con botellas', 'background_2.jpg'), ('Sin botellas', 'background_1.jpg')], onchange=set_background)
+    
     return level
 
 def create_loading(text=None):    
