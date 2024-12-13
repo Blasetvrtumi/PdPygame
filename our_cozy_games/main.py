@@ -13,20 +13,29 @@ currentFrame = 0
 frameDel = 100
 lastUp = pygame.time.get_ticks()
 speed = 5
-
-try:
-    with open('selected_character.txt', 'r') as f:
-        selected_character = f.read()
-except:
-    selected_character = "brown_hair.png"
-
-charTileset = pygame.image.load("./static/src/character/" + selected_character)
 COLS = 3
 ROWS = 4
-FRAME_WIDTH = charTileset.get_width() // COLS
-FRAME_HEIGHT = charTileset.get_height() // ROWS
 
-def load_frames(tileset, rows, cols):
+def prepare_char():
+    global FRAME_WIDTH, FRAME_HEIGHT
+
+    try:
+        with open('selected_character.txt', 'r') as f:
+            selected_character = f.read()
+    except:
+        selected_character = "brown_hair.png"
+
+    print(selected_character)
+
+    charTileset = pygame.image.load("./static/src/character/" + selected_character)
+
+    FRAME_WIDTH = charTileset.get_width() // COLS
+    FRAME_HEIGHT = charTileset.get_height() // ROWS
+
+    charFrames = load_frames(charTileset, 4, 3, FRAME_WIDTH, FRAME_HEIGHT)
+    return charFrames
+
+def load_frames(tileset, rows, cols, FRAME_WIDTH, FRAME_HEIGHT):     
     frames = []
     for row in range(rows):
         for col in range(cols):
@@ -40,8 +49,6 @@ def load_frames(tileset, rows, cols):
             frames.append(frame)
     return frames
 
-
-charFrames = load_frames(charTileset, 4, 3)
 
 def set_rects_in_map():
     WALLWIDTH = 35
@@ -205,6 +212,8 @@ class Games:
         match self.code:
             case 1: pass #Sitio para llamar a minijuegos
 def run(char_cord = (350, 100), mensaje_leido = None):
+    prepare_char()
+
     WIDTH = 1100
     HEIGHT = 800
     if mensaje_leido:
@@ -232,6 +241,7 @@ def run(char_cord = (350, 100), mensaje_leido = None):
     cheeckers = pygame.image.load(os.path.join(carpeta, 'cheeckers_1.png')).convert()
     tic_tac_toe = pygame.image.load(os.path.join(carpeta, 'tic_tac_toe_1.png')).convert()
     notebook = pygame.image.load(os.path.join(carpeta, 'notebook.png')).convert_alpha()
+    charFrames = prepare_char()
 
 
     #Arreglar desde aquí    
