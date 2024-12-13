@@ -29,13 +29,13 @@ else:
         {'nombre': "Damas (first aptempt)", 'programa': checkers},
         {'nombre': "Nonograma", 'programa': nonograma}]
 
-def set_juegos(numero):
+def set_juegos(numero, cords):
     try:
         nombre = juegos[numero]['nombre']
         programa = juegos[numero]['programa']
         return nombre, programa.run
     except:
-        error_page()
+        error_page(cords)
         return None, None
 
 def lanzar_carga():
@@ -57,9 +57,9 @@ def crear_carga_main(text = None):
     loading.add.button("Ir a rpg", lanzar_main)
     return loading
 
-def loading_page(text = None, programa = None, cords_main = None):   
+def loading_page(text = None, programa = None, cords_main = None):  
     if isinstance(programa, (int, float)):
-        nombre, juego = set_juegos(programa)
+        nombre, juego = set_juegos(programa, cords_main)
         if not juego:
             error_page(cords_main)
         else:
@@ -116,6 +116,7 @@ def create_error_page():
     return loading
 
 def error_page(cords_main = None):
+    print(cords_main)
     pygame.init()
     surface = pygame.display.set_mode((600, 400))
     arrow = pygame_menu.widgets.LeftArrowSelection(arrow_size=(10, 15))
