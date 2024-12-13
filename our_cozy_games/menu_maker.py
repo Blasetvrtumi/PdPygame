@@ -12,10 +12,22 @@ update_loading = pygame.USEREVENT + 0
 atras = False
 a_devolver = None
 
-juegos = [
-    {'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},
-    {'nombre': "Damas (first aptempt)", 'programa': checkers},
-    {'nombre': "Nonograma", 'programa': nonograma}]
+try:
+    with open('selected_games.txt', 'r') as f:
+        selected_background = f.read()
+except:
+    selected_background = 'funcionales'
+
+if selected_background == 'funcionales':
+    juegos = [
+        {'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},
+        {},
+        {'nombre': "Nonograma", 'programa': nonograma}]
+else:
+        juegos = [
+        {'nombre': "Tres en raya (2p)", 'programa': tic_tac_toe},
+        {'nombre': "Damas (first aptempt)", 'programa': checkers},
+        {'nombre': "Nonograma", 'programa': nonograma}]
 
 def set_juegos(numero):
     try:

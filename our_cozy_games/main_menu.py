@@ -8,14 +8,19 @@ import sys
 #surface = pygame.display.set_mode((600, 400))
 
 def set_hair_color(value, ruta):
-    print(value)
+    print('Cambiado a ' +value)
     with open('selected_character.txt', 'w') as f:
         f.write(ruta)        
 
 def set_background(value, ruta):
-    print(value)
+    print('Cambiado a ' +value)
     with open('selected_background.txt', 'w') as f:
         f.write(ruta) 
+
+def set_games(value, tipo):
+    print('Cambiado a ' +value)
+    with open('selected_games.txt', 'w') as f:
+        f.write(tipo) 
 
 def start_the_game(mainmenu, loading):
     name = mainmenu.get_input_data()['name']
@@ -39,7 +44,7 @@ def seleccionado_moreno():
     try:
         with open('selected_character.txt', 'r') as f:
             selected_character = f.read()
-        print(selected_character == 'brunette_tileset.png')
+        #print(selected_character == 'brunette_tileset.png')
         return selected_character == 'brunette_tileset.png'
     except:
         return False
@@ -48,10 +53,20 @@ def seleccionado_sin_botellas():
     try:
         with open('selected_background.txt', 'r') as f:
             selected_background = f.read()
-        print(selected_background == 'background_1.jpg')
+        #print(selected_background == 'background_1.jpg')
         return selected_background == 'background_1.jpg'
     except:
         return False
+
+def selected_all_games(): #'selected_games.txt'
+    try:
+        with open('selected_games.txt', 'r') as f:
+            selected_background = f.read()
+        print(selected_background == 'todos')
+        return selected_background == 'todos'
+    except:
+        return False
+
 
 def crear_menu_seleccion():
     level = pygame_menu.Menu('Select your preferences', 600, 400, theme=themes.THEME_BLUE)
@@ -63,7 +78,10 @@ def crear_menu_seleccion():
         level.add.selector('Fondo :', [('Sin botellas', 'background_1.jpg'), ('Con botellas', 'background_2.jpg')], onchange=set_background)
     else:
         level.add.selector('Fondo :', [('Con botellas', 'background_2.jpg'), ('Sin botellas', 'background_1.jpg')], onchange=set_background)
-    
+    if selected_all_games():
+        level.add.selector('Juegos jugables :', [('Todos', 'todos'), ('Terminados', 'funcionales')], onchange=set_games)
+    else:
+        level.add.selector('Juegos jugables :', [('Terminados', 'funcionales'), ('Todos', 'todos')], onchange=set_games)
     return level
 
 def create_loading(text=None):    
