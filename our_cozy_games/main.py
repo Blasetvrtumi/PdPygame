@@ -16,6 +16,12 @@ speed = 5
 COLS = 3
 ROWS = 4
 
+#Sound
+pygame.mixer.init()
+pygame.mixer.music.load("./static/src/mix/Hope.mp3")
+pygame.mixer.music.play(-1)
+stepsSound = pygame.mixer.Sound("./static/src/mix/Steps.mp3")
+
 def prepare_char():
     global FRAME_WIDTH, FRAME_HEIGHT
 
@@ -92,12 +98,6 @@ def set_rects_in_map():
 
     return wallRects, games_rects, notes_rects, all_rects
 wallRects, games_rects, notes_rects, all_rects = set_rects_in_map()
-
-pygame.mixer.init()
-pygame.mixer.music.load("./static/src/mix/Hope.mp3")
-pygame.mixer.music.play(-1)
-
-stepsSound = pygame.mixer.Sound("./static/src/mix/Steps.mp3")
 
 #Class that creates the main character
 class Character:
@@ -211,6 +211,7 @@ class Games:
     def go(self):
         match self.code:
             case 1: pass #Sitio para llamar a minijuegos
+            
 def run(char_cord = (350, 100), mensaje_leido = None):
     prepare_char()
 
